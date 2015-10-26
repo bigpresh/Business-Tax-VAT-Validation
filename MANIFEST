@@ -7,7 +7,7 @@ COPYING
 t/00_use.t
 t/01_local_check.t
 t/02_local_check_nok.t
-distant_checks/03_distant_check.t
+xt/03_distant_check.t
 t/pod.t
 t/pod-coverage.t
 examples/vat_cli.pl
