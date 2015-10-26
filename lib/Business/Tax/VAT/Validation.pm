@@ -6,13 +6,16 @@ package Business::Tax::VAT::Validation;
 =cut
 
  ############################################################################
+# Original author:                                                           #
 # IT Development software                                                    #
 # European VAT number validator Version 1.0.2                                #
-# Copyright 2003 Nauwelaerts B  bpgn@cpan.org                                #
 # Created 06/08/2003            Last Modified 30/11/2012                     #
+#                                                                            #
+# Maintainership kindly handed over to David Precious (BIGPRESH) in 2015     #
  ############################################################################
 # COPYRIGHT NOTICE                                                           #
 # Copyright 2003 Bernard Nauwelaerts  All Rights Reserved.                   #
+# Copyright 2015 David Precious       All Rights Reserved.                   #
 #                                                                            #
 # THIS SOFTWARE IS RELEASED UNDER THE GNU Public Licence                     #
 # Please see COPYING for details                                             #
@@ -467,7 +470,9 @@ If you find this module useful, or have any comments, suggestions or improvement
 
 =head1 AUTHOR
 
-Bernard Nauwelaerts <bpgn@cpan.org>
+Original author: Bernard Nauwelaerts <bpgn@cpan.org>
+
+Maintainership since 2015: David Precious (BIGPRESH) <davidp@preshweb.co.uk>
 
 
 =head1 CREDITS
