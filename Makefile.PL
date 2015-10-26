@@ -11,7 +11,7 @@ WriteMakefile(
                             }, 
     ABSTRACT_FROM    => 'lib/Business/Tax/VAT/Validation.pm',
 	# Changed in 0.22
-    AUTHOR           => 'Bernard Nauwelaerts <bpgn@cpan.org>',
+    AUTHOR           => 'David Precious <davidp@preshweb.co.uk>',
 	# Added in 0.22
 	LICENSE          => 'GPL_3',
 );
