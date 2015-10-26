@@ -25,69 +25,7 @@ package Business::Tax::VAT::Validation;
 #  WITHOUT ANY WARRANTY, without even the implied warranty of                #
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                      #
 #                                                                            #
- ############################################################################
-# Revision history (dd/mm/yyyy) :                                            #
-#                                                                            #
-# 1.02   30/11/2012; Fix POD typo; Thanks to Gregor Herrmann                 #
-# 1.01   28/11/2012; Fix POD UTF8 Issue; Thanks to Graham Knop               #
-# 1.00   25/03/2012; This module now uses the VIES SOAP interface.           #
-#                    Add get_informations method                             #
-# 0.24   06/03/2012; Fix traderName field required for EL and ES MS          #
-#                    Update POST request fields                              #
-# 0.23   29/02/2012; Fix regexp in _is_res_ok with multiline regexp          #
-#                    (Thanks to Bart Heupers)                                #
-# 0.22   04/10/2011; Typo fix in POD error message #2                        #
-#                    (Thanks to Martin H. Sluka)                             #
-#                    Minor POD fixes (BPGN)                                  #
-#                    Fix subs args bug (performance fix) (BPGN)              #
-# 0.21   04/08/2009; New error status 19: EU database too busy               #
-#                    (Martin H. Sluka)                                       #
-# 0.20   18/08/2008; VIES HTML changes: now allowing multiples spaces        #
-#                    (Thanks to Simon Williams, Benoît Galy & Raluca Boboia) #
-# 0.19   29/04/2008; HU regexp: missing digit "9" added                      #
-#                    (Thanks to Simon Williams)                              #
-# 0.18   03/01/2008; BE regexp: from transitional 9-digit & 10-digit format  #
-#                    to 10-digit new format                                  #
-# 0.16   13/07/2007; Allowing spaces in regexps                              #
-# 0.15   06/07/2007; Added missing "keys" during $self->{members}            #
-#                    constuction                                             #
-#                    (Thanks to Dave O.)                                     #
-#                    Corrected returned 0-1 error codes inversion            #
-#                    Some POD improvements                                   #
-# 0.14   05/07/2007; VIES interface changed $baseurl, and POST params were   #
-#                    changed to lowercase. Added support for Bulgaria and    #
-#                    Romania (thanks to Kaloyan Iliev)                       #
-#                    New get_last_error_code method                          #
-#                    Updated regexps according to the actual VIES FAQ        #
-#                    Some slight documentation improvements                  #
-#                    Improved tests: each regexp is tested accordind to FAQ  #
-# 0.13   16/01/2007; VIES interface changed "not found" layout               #
-#                    (Thanks to Tom Kirkpatrick for this update)             #
-# 0.12   10/11/2006; YAML Compliance                                         #
-# 0.11   10/11/2006; Minor bug allowing one forbidden character              #
-#                    corrected in Belgian regexp                             #
-#                     (Thanks to Andy Wardley for this report)               #
-#                    + added regular_expressions property                    #
-#                      for external testing purposes                         #
-# 0.10   20/07/2006; Adding Test::Pod to test suite                          #
-# 0.09   20/06/2006; local_check method allows you to test VAT numbers       #
-#                    without asking the EU database. Based on regexps.       #
-# 0.08   20/06/2006; 9 and 10 digits transitional regexp for Belgium         #
-#                    From 31/12/2007, only 10 digits will be valid           #
-# 0.07   25/05/2006; Now we use "request" method not "simple request"        #
-#                    in order to follow potential redirects                  #
-# 0.06   25/05/2006; Changed $baseurl                                        #
-#                    (Thanks to Torsten Mueller for this update)             #
-# 0.05   19/01/2006; Adding support for proxy settings                       #
-#                    (Thanks to Tom Kirkpatrick for this update)             #
-# 0.04   01/11/2004; Adding support for error "Member Service Unavailable"   #
-# 0.03   01/11/2004; Adding 10 new members.                                  #
-#                    (Thanks to Robert Alloway for this update)              #
-# 0.02   29/09/2003; Fix alphanumeric VAT numbers rejection                  #
-#                    (Thanks to Robert Alloway for the regexps)              #
-# 0.01   06/08/2003; Initial release                                         #
-#                                                                            #
- ############################################################################
+############################################################################
 use strict;
 
 BEGIN {
