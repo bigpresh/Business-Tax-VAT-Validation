@@ -1,5 +1,11 @@
 Revision history for Business::Tax::VAT::Validation
 
+1.10  26/10/2015
+    - David Precious (BIGPRESH) taking over maintainership - thanks to BPGN!
+    - Recognise new Irish VAT number format
+    - Recognise Croatia as an EU member state
+    - Documentation tweaks
+
 1.02  30/11/2012
     - Fix POD typo; Thanks to Gregor Herrmann
 
