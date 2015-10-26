@@ -1,5 +1,8 @@
 Revision history for Business::Tax::VAT::Validation
 
+1.02  30/11/2012
+    - Fix POD typo; Thanks to Gregor Herrmann
+
 1.01  28/11/2012
     - Fix POD UTF-8 Encoding issue
 
