@@ -36,7 +36,7 @@ BEGIN {
 
 =head1 NAME
 
-Business::Tax::VAT::Validation - A class for european VAT numbers validation.
+Business::Tax::VAT::Validation - Validate EU VAT numbers against VIES
 
 =head1 SYNOPSIS
 
@@ -53,9 +53,13 @@ Business::Tax::VAT::Validation - A class for european VAT numbers validation.
   
 =head1 DESCRIPTION
 
-This class provides an easy api to check european VAT numbers' syntax, and if they has been registered by the competent authorities.
+This class provides an easy API to check European VAT numbers' syntax,
+and if they has been registered by the competent authorities.
 
-It asks the EU database (VIES) for this, using its SOAP interface methods. 
+It asks the EU database (VIES) for this, using its SOAP API.  Basic checks that
+the supplied VAT number fit the expected format for the specified EU member
+state are performed first, to avoid unnecessarily sending queries to VIES for
+input that could never be valid.
 
 
 =head1 CONSTRUCTOR
