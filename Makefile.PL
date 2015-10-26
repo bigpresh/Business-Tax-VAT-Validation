@@ -10,8 +10,13 @@ WriteMakefile(
 				LWP::UserAgent	      => 1.0,
                             }, 
     ABSTRACT_FROM    => 'lib/Business/Tax/VAT/Validation.pm',
-	# Changed in 0.22
     AUTHOR           => 'David Precious <davidp@preshweb.co.uk>',
-	# Added in 0.22
-	LICENSE          => 'GPL_3',
+    LICENSE          => 'GPL_3',
+    META_MERGE => {
+    resources => {
+        repository => 'https://github.com/bigpresh/Business-Tax-VAT-Validation',
+        bugtracker => 'https://github.com/bigpresh/Business-Tax-VAT-Validation/issues',
+        homepage   => 'https://github.com/bigpresh/Business-Tax-VAT-Validation/', 
+    },  
+}, 
 );
