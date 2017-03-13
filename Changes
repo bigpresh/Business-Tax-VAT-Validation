@@ -1,5 +1,9 @@
 Revision history for Business::Tax::VAT::Validation
 
+1.11  13/03/2017
+    - Add get_last_response accessor, to return the last response we got
+      (pvoglhofer)
+
 1.10  26/10/2015
     - David Precious (BIGPRESH) taking over maintainership - thanks to BPGN!
     - Recognise new Irish VAT number format
