@@ -85,6 +85,7 @@ sub new {
         baseurl      => $arg{baseurl} || 'http://ec.europa.eu/taxation_customs/vies/services/checkVatService',
         error        => '',
         error_code   => 0,
+        response     => '',
         re           => {
             ### t/01_localcheck.t tests if these regexps accepts all regular VAT numbers, according to VIES FAQ
             AT => 'U[0-9]{8}',
@@ -310,6 +311,14 @@ sub get_last_error_code {
     $_[0]->{error_code};
 }
 
+=item B<get_last_response> - Returns the full last response
+
+=cut
+
+sub get_last_response {
+    $_[0]->{response};
+}
+
 ### PRIVATE FUNCTIONS ==========================================================
 sub _format_vatn {
     my ( $self, $vatn, $mscc ) = @_;
@@ -350,6 +359,7 @@ sub _is_res_ok {
     my ( $self, $code, $res ) = @_;
     $self->{informations}={};
     $res=~s/[\r\n]/ /g;
+    $self->{response} = $res;
     if ($code == 200) {
         if ($res=~m/<valid> *(.*?) *<\/valid>/) {
             my $v = $1;
