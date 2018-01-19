@@ -360,42 +360,53 @@ sub _is_res_ok {
     $self->{informations}={};
     $res=~s/[\r\n]/ /g;
     $self->{response} = $res;
-    if ($code == 200) {
-        if ($res=~m/<valid> *(.*?) *<\/valid>/) {
-            my $v = $1;
-            if ($v eq 'true' || $v eq '1') {
-                if ($res=~m/<name> *(.*?) *<\/name>/) {
-                    $self->{informations}{name} = $1
-                }
-                if ($res=~m/<address> *(.*?) *<\/address>/) {
-                    $self->{informations}{address} = $1
-                }
-                $self->_set_error( -1, 'Valid VAT Number');
-                return 1;
-            } else {
-                return $self->_set_error( 2, 'Invalid VAT Number ('.$v.')');
-            }
+
+    # Check for a SOAP fault first (sometimes we can get one even with a
+    # successful HTTP status)
+    if ($res=~m/<faultcode> *(.*?) *<\/faultcode> *<faultstring> *(.*?) *<\/faultstring>/) {
+        my $faultcode   = $1;
+        my $faultstring = $2;
+        if ($faultcode eq 'soap:Server' && $faultstring eq 'TIMEOUT') {
+            return $self->_set_error(17, "The VIES server timed out. Please re-submit your request later.")
+        } elsif ($faultcode eq 'soap:Server' && $faultstring eq 'MS_UNAVAILABLE') {
+            return $self->_set_error(18, "Member State service unavailable. Please re-submit your request later.")
+        } elsif ($faultstring=~m/^Couldn't parse stream/) {
+            return $self->_set_error( 21, "The VIES database failed to parse a stream. Please re-submit your request later." );
         } else {
-            return $self->_set_error( 257, "Invalid response, please contact the author of this module. " . $res );
+            return $self->_set_error(257,
+                "Unrecognised VIES fault $faultcode ($faultstring)"
+                . " - please inform author of " . __PACKAGE__
+            );
+        }
+    }
+
+    # OK, no specific error given - nor generally, check the HTTP status
+    if ($code != 200) {
+        return $self->_set_error( $code, $1.' '.$2 );
+    }
+    if ($res=~m/^Can't connect to/) {
+        # (Connection failure message returned by the VIES API, not we failed to
+        # connect to it; that'd have resulted in a non-200 HTTP code above)
+        return $self->_set_error( 20, "Connexion to the VIES database failed. " . $res );
+    } 
+    
+    # OK, we expect the response to be successful...
+    if ($res=~m/<valid> *(.*?) *<\/valid>/) {
+        my $v = $1;
+        if ($v eq 'true' || $v eq '1') {
+            if ($res=~m/<name> *(.*?) *<\/name>/) {
+                $self->{informations}{name} = $1
+            }
+            if ($res=~m/<address> *(.*?) *<\/address>/) {
+                $self->{informations}{address} = $1
+            }
+            $self->_set_error( -1, 'Valid VAT Number');
+            return 1;
+        } else {
+            return $self->_set_error( 2, 'Invalid VAT Number ('.$v.')');
         }
     } else {
-        if ($res=~m/<faultcode> *(.*?) *<\/faultcode> *<faultstring> *(.*?) *<\/faultstring>/) {
-            my $faultcode   = $1;
-            my $faultstring = $2;
-            if ($faultcode eq 'soap:Server' && $faultstring eq 'TIMEOUT') {
-                return $self->_set_error(17, "The VIES server timed out. Please re-submit your request later.")
-            } elsif ($faultcode eq 'soap:Server' && $faultstring eq 'MS_UNAVAILABLE') {
-                return $self->_set_error(18, "Member State service unavailable. Please re-submit your request later.")
-            } elsif ($faultstring=~m/^Couldn't parse stream/) {
-        	    return $self->_set_error( 21, "The VIES database failed to parse a stream. Please re-submit your request later." );
-            } else {
-                return $self->_set_error( $code, $1.' '.$2 )
-            }
-        } elsif ($res=~m/^Can't connect to/) {
-        	return $self->_set_error( 20, "Connexion to the VIES database failed. " . $res );
-        } else {
-            return $self->_set_error( 257, "Invalid response [".$code."], please contact the author of this module. " . $res );
-        }
+        return $self->_set_error( 257, "Invalid response, please contact the author of this module. " . $res );
     }
 }
 
