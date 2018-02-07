@@ -1,5 +1,11 @@
 Revision history for Business::Tax::VAT::Validation
 
+{NEXT}
+    - Check for SOAP faults, even if HTTP status is 200 (Issue #2) - sometimes
+      VIES will return a 200 OK status containing SOAP faults
+    - Change to return value for non-200 responses - now the error code is the
+      HTTP code, and the error message explains what we actually got
+
 1.12  20/03/2020
     - Use https:// base_url to avoid a redirect (fgehring)
 
