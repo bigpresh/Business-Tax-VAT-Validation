@@ -380,9 +380,9 @@ sub _is_res_ok {
         }
     }
 
-    # OK, no specific error given - more generally, check the HTTP status
+    # OK, no specific error given - more generally, check the HTTP status now
     if ($code != 200) {
-        return $self->_set_error( $code, $1.' '.$2 );
+        return $self->_set_error( $code, "Invalid response, HTTP $code, $res" );
     }
     if ($res=~m/^Can't connect to/) {
         # (Connection failure message returned by the VIES API, not we failed to
