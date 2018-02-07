@@ -380,7 +380,7 @@ sub _is_res_ok {
         }
     }
 
-    # OK, no specific error given - nor generally, check the HTTP status
+    # OK, no specific error given - more generally, check the HTTP status
     if ($code != 200) {
         return $self->_set_error( $code, $1.' '.$2 );
     }
