@@ -82,7 +82,7 @@ input that could never be valid.
 sub new {
     my ( $class, %arg ) = @_;
     my $self = {
-        baseurl      => $arg{baseurl} || 'http://ec.europa.eu/taxation_customs/vies/services/checkVatService',
+        baseurl      => $arg{baseurl} || 'https://ec.europa.eu/taxation_customs/vies/services/checkVatService',
         error        => '',
         error_code   => 0,
         response     => '',
