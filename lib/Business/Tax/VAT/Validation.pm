@@ -29,7 +29,7 @@ package Business::Tax::VAT::Validation;
 use strict;
 
 BEGIN {
-    $Business::Tax::VAT::Validation::VERSION = '1.11';
+    $Business::Tax::VAT::Validation::VERSION = '1.12';
     use HTTP::Request::Common qw(POST);
     use LWP::UserAgent;
 }
