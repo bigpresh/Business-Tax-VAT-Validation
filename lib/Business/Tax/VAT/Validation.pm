@@ -17,7 +17,7 @@ package Business::Tax::VAT::Validation;
 # Copyright 2003 Bernard Nauwelaerts  All Rights Reserved.                   #
 # Copyright 2015 David Precious       All Rights Reserved.                   #
 #                                                                            #
-# THIS SOFTWARE IS RELEASED UNDER THE GNU Public Licence                     #
+# THIS SOFTWARE IS RELEASED UNDER THE GNU Public Licence version 3           #
 # Please see COPYING for details                                             #
 #                                                                            #
 # DISCLAIMER                                                                 #
@@ -470,7 +470,7 @@ Torsten Mueller, Archesoft, Germany
 
 =head1 LICENSE
 
-GPL. Enjoy! See COPYING for further information on the GPL.
+GPL3. Enjoy! See COPYING for further information on the GPL.
 
 
 =head1 DISCLAIMER
