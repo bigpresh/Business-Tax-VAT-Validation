@@ -83,6 +83,7 @@ sub new {
     my ( $class, %arg ) = @_;
     my $self = {
         baseurl      => $arg{baseurl} || 'https://ec.europa.eu/taxation_customs/vies/services/checkVatService',
+        hmrc_baseurl => $arg{hmrc_baseurl} || 'https://api.service.hmrc.gov.uk/organisations/vat/check-vat-number/lookup/',
         error        => '',
         error_code   => 0,
         response     => '',
@@ -190,22 +191,7 @@ sub check {
     $countryCode ||= '';
     ( $vatNumber, $countryCode ) = $self->_format_vatn( $vatNumber, $countryCode );
     if ($vatNumber) {
-        my $ua = LWP::UserAgent->new;
-        if ( ref $self->{proxy} eq 'ARRAY' ) {
-            $ua->proxy( @{ $self->{proxy} } );
-        } else {
-            $ua->env_proxy;
-        }
-        $ua->agent( 'Business::Tax::VAT::Validation/'. $Business::Tax::VAT::Validation::VERSION );
-        
-        my $request = HTTP::Request->new(POST => $self->{baseurl});
-        $request->header(SOAPAction => 'http://www.w3.org/2003/05/soap-envelope');
-        $request->content(_in_soap_envelope($vatNumber, $countryCode));
-        $request->content_type("Content-Type: application/soap+xml; charset=utf-8");
-        
-        my $response = $ua->request($request);
-        
-        return $countryCode . '-' . $vatNumber if $self->_is_res_ok( $response->code, $response->decoded_content );
+        return $self->_check_vies($vatNumber, $countryCode);
     }
     0;
 }
@@ -320,6 +306,31 @@ sub get_last_response {
 }
 
 ### PRIVATE FUNCTIONS ==========================================================
+sub _get_ua {
+    my ($self) = @_;
+    my $ua = LWP::UserAgent->new;
+    if ( ref $self->{proxy} eq 'ARRAY' ) {
+        $ua->proxy( @{ $self->{proxy} } );
+    } else {
+        $ua->env_proxy;
+    }
+    $ua->agent( 'Business::Tax::VAT::Validation/'. $Business::Tax::VAT::Validation::VERSION );
+    return $ua;
+}
+
+sub _check_vies {
+  my ($self, $vatNumber, $countryCode) = @_;
+  my $ua = $self->_get_ua();
+  my $request = HTTP::Request->new(POST => $self->{baseurl});
+  $request->header(SOAPAction => 'http://www.w3.org/2003/05/soap-envelope');
+  $request->content(_in_soap_envelope($vatNumber, $countryCode));
+  $request->content_type("Content-Type: application/soap+xml; charset=utf-8");
+
+  my $response = $ua->request($request);
+
+  return $countryCode . '-' . $vatNumber if $self->_is_res_ok( $response->code, $response->decoded_content );
+}
+
 sub _format_vatn {
     my ( $self, $vatn, $mscc ) = @_;
     my $null = '';
