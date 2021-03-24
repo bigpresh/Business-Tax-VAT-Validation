@@ -123,7 +123,7 @@ sub new {
             XI => '([0-9]{3} ?[0-9]{4} ?[0-9]{2}|[0-9]{3} ?[0-9]{4} ?[0-9]{2} ?[0-9]{3}|GD[0-9]{3}|HA[0-9]{3})',
         },
         proxy        => $arg{-proxy},
-        informations => {}
+        information => {}
     };
     $self = bless $self, $class;
     $self->{members} = join( '|', keys %{ $self->{re} } );
@@ -207,6 +207,7 @@ Valid MS values are :
 
 sub check {
     my ($self, $vatNumber, $countryCode, @other) = @_;    # @other is here for backward compatibility purposes
+    $self->{information} = {};
     return $self->_set_error('You must provide a VAT number') unless $vatNumber;
     $countryCode ||= '';
     ( $vatNumber, $countryCode ) = $self->_format_vatn( $vatNumber, $countryCode );
@@ -229,6 +230,7 @@ sub check {
 
 sub local_check {
     my ( $self, $vatn, $mscc, @other ) = @_;    # @other is here for backward compatibility purposes
+    $self->{information} = {};
     return $self->_set_error('You must provide a VAT number') unless $vatn;
     $mscc ||= '';
     ( $vatn, $mscc ) = $self->_format_vatn( $vatn, $mscc );
@@ -240,19 +242,28 @@ sub local_check {
     }
 }
 
-=item B<informations> - Returns informations related to the last validated VAT number
-    
-    %infos=$hvatn->informations();
-    
+=item B<information> - Returns information related to the last checked VAT number
+
+    # Get all available information as a hashref:
+    my $info = $hvatn->information();
+
+    # Get a particular key:
+    my $address = $hvatn->information('address');
+
+Which information is offered depends on the checker used - for UK VAT numbers,
+checked via the HMRC API, C<address> is the only key which will be set.
+
+For EU VAT numbers checked via VIES, you can expect C<name> and C<address>.
+This hashref will be reset every time you call check() or local_check()
 
 =cut
 
-sub informations {
+sub information {
     my ( $self, $key, @other ) = @_; 
     if ($key) {
-        return $self->{informations}{$key} 
+        return $self->{information}{$key} 
     } else {
-        return ($self->{informations})    
+        return ($self->{information})    
     }
 }
 
@@ -362,11 +373,10 @@ sub _check_hmrc {
     $request->header(Accept => 'application/vnd.hmrc.1.0+json');
     my $response = $ua->request($request);
 
-    $self->{informations}={};
     $self->{res} = $response->decoded_content;
     if ($response->code == 200) {
         my $data = decode_json($self->{res});
-        $self->{informations}->{name} = $data->{target}->{name};
+        $self->{information}->{name} = $data->{target}->{name};
         my $line = 1;
         my $address = "";
         while (defined $data->{target}->{address}->{"line$line"}) {
@@ -375,7 +385,7 @@ sub _check_hmrc {
         }
         $address .= $data->{target}->{address}->{postcode};
         $address .= "\n".$data->{target}->{address}->{countryCode};
-        $self->{informations}->{address} = $address;
+        $self->{information}->{address} = $address;
         $self->_set_error( -1, 'Valid VAT Number');
     }
     elsif ($response->code == 404) {
@@ -428,7 +438,7 @@ sub _in_soap_envelope {
 
 sub _is_res_ok {
     my ( $self, $code, $res ) = @_;
-    $self->{informations}={};
+    $self->{information}={};
     $res=~s/[\r\n]/ /g;
     $self->{response} = $res;
     if ($code == 200) {
@@ -436,10 +446,10 @@ sub _is_res_ok {
             my $v = $1;
             if ($v eq 'true' || $v eq '1') {
                 if ($res=~m/<name> *(.*?) *<\/name>/) {
-                    $self->{informations}{name} = $1
+                    $self->{information}{name} = $1
                 }
                 if ($res=~m/<address> *(.*?) *<\/address>/) {
-                    $self->{informations}{address} = $1
+                    $self->{information}{address} = $1
                 }
                 $self->_set_error( -1, 'Valid VAT Number');
                 return 1;
