@@ -9,7 +9,7 @@ package Business::Tax::VAT::Validation;
 # Original author:                                                           #
 # IT Development software                                                    #
 # European VAT number validator Version 1.0.2                                #
-# Created 06/08/2003            Last Modified 30/11/2012                     #
+# Created 06/08/2003                                                         #
 #                                                                            #
 # Maintainership kindly handed over to David Precious (BIGPRESH) in 2015     #
  ############################################################################
