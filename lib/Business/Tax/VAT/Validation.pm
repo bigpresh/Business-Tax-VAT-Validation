@@ -33,6 +33,7 @@ our $VERSION = '1.12';
 
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
+use JSON qw/ decode_json /;
 
 =head1 NAME
 
@@ -61,6 +62,8 @@ the supplied VAT number fit the expected format for the specified EU member
 state are performed first, to avoid unnecessarily sending queries to VIES for
 input that could never be valid.
 
+It also supports looking up VAT codes from the United Kingdom by using the
+REST API provided by their HMRC.
 
 =head1 CONSTRUCTOR
 
@@ -117,6 +120,7 @@ sub new {
             SE => '[0-9]{12}',
             SI => '[0-9]{8}',
             SK => '[0-9]{10}',
+            XI => '([0-9]{3} ?[0-9]{4} ?[0-9]{2}|[0-9]{3} ?[0-9]{4} ?[0-9]{2} ?[0-9]{3}|GD[0-9]{3}|HA[0-9]{3})',
         },
         proxy        => $arg{-proxy},
         informations => {}
@@ -132,7 +136,23 @@ sub new {
 
 =over 4
 
-=item B<member_states> Returns all member states 2-digit codes as array
+=item B<member_states> Returns all supported country codes.
+
+These are ISO 3166-1 alpha-2 country codes with two exceptions. This module
+supports VAT codes from all current European Union member states and The United
+Kingdom of Great Britain and Northern Ireland.
+
+=over 4
+
+=item C<EL> Greece
+
+Must be used in place of Greece's proper code.
+
+=item C<XI> Northern Ireland
+
+May be used rather than C<GB> for checking a Northern Irish company.
+
+=back
 
     @ms=$hvatn->member_states;
     
@@ -180,8 +200,8 @@ or specify the VAT and MSC (vatNumber and countryCode) individually.
 Valid MS values are :
 
  AT, BE, BG, CY, CZ, DE, DK, EE, EL, ES,
- FI, FR, GB, HU, IE, IT, LU, LT, LV, MT,
- NL, PL, PT, RO, SE, SI, SK
+ FI, FR, GB, HR, HU, IE, IT, LU, LT, LV,
+ MT, NL, PL, PT, RO, SE, SI, SK, XI
 
 =cut
 
@@ -191,6 +211,9 @@ sub check {
     $countryCode ||= '';
     ( $vatNumber, $countryCode ) = $self->_format_vatn( $vatNumber, $countryCode );
     if ($vatNumber) {
+        if ($countryCode eq 'GB') {
+            return $self->_check_hmrc($vatNumber, $countryCode);
+        }
         return $self->_check_vies($vatNumber, $countryCode);
     }
     0;
@@ -331,6 +354,43 @@ sub _check_vies {
   return $countryCode . '-' . $vatNumber if $self->_is_res_ok( $response->code, $response->decoded_content );
 }
 
+sub _check_hmrc {
+    my ($self, $vatNumber, $countryCode) = @_;
+    my $ua = $self->_get_ua();
+
+    my $request = HTTP::Request->new(GET => $self->{hmrc_baseurl}.$vatNumber);
+    $request->header(Accept => 'application/vnd.hmrc.1.0+json');
+    my $response = $ua->request($request);
+
+    $self->{informations}={};
+    $self->{res} = $response->decoded_content;
+    if ($response->code == 200) {
+        my $data = decode_json($self->{res});
+        $self->{informations}->{name} = $data->{target}->{name};
+        my $line = 1;
+        my $address = "";
+        while (defined $data->{target}->{address}->{"line$line"}) {
+            $address .= $data->{target}->{address}->{"line$line"}."\n";
+            $line++;
+        }
+        $address .= $data->{target}->{address}->{postcode};
+        $address .= "\n".$data->{target}->{address}->{countryCode};
+        $self->{informations}->{address} = $address;
+        $self->_set_error( -1, 'Valid VAT Number');
+    }
+    elsif ($response->code == 404) {
+        return $self->_set_error( 2, 'Invalid VAT Number ('.$vatNumber.')');
+    }
+    elsif ($response->code == 400) {
+        return $self->_set_error( 3, 'VAT number badly formed ('.$vatNumber.')');
+    }
+    else {
+        return $self->_set_error( 500, 'Could not contact HMRC: '.$response->status_line);
+    }
+
+    return $countryCode . '-' . $vatNumber;
+}
+
 sub _format_vatn {
     my ( $self, $vatn, $mscc ) = @_;
     my $null = '';
@@ -423,8 +483,10 @@ sub _set_error {
 
 LWP::UserAgent
 
-I<http://ec.europa.eu/taxation_customs/vies/faqvies.do> for the FAQs related to the VIES service.
+L<http://ec.europa.eu/taxation_customs/vies/faqvies.do> for the FAQs related to the VIES service.
 
+L<https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-registered-companies-api/1.0>
+for details of the service provided by the UK's HMRC.
 
 =head1 FEEDBACK
 
@@ -486,7 +548,7 @@ GPL3. Enjoy! See COPYING for further information on the GPL.
 
 =head1 DISCLAIMER
 
-See I<http://ec.europa.eu/taxation_customs/vies/viesdisc.do> to known the limitations of the EU validation service.
+See L<http://ec.europa.eu/taxation_customs/vies/viesdisc.do> to known the limitations of the EU validation service.
 
   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
