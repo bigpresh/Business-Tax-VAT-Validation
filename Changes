@@ -1,5 +1,15 @@
 Revision history for Business::Tax::VAT::Validation
 
+1.13  24/03/2021 (TRIAL release)
+    - Implement checking of UK VAT numbers via HMRC (davel)
+    - Some refactoring (davel)
+    - Add information returned by VIES/HMRC via new information() (davel)
+
+Many thanks to Dave Lambley (davel) for the changse in this release!
+
+This is going out as a trial release first, then will be promoted to
+a full release as 1.20 soon.
+
 1.12  20/03/2020
     - Use https:// base_url to avoid a redirect (fgehring)
 
