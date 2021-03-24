@@ -529,7 +529,13 @@ Bart Heupers, Netherlands.
 Martin H. Sluka, noris network AG, Germany.
 
 =item *
-Simon Williams, UK2 Limited, United Kingdom & Benoît Galy, Greenacres, France & Raluca Boboia, Evozon, Romania
+Simon Williams, UK2 Limited, United Kingdom
+
+=item *
+Benoît Galy, Greenacres, France
+
+=item *
+Raluca Boboia, Evozon, Romania
 
 =item *
 Dave O., POBox, U.S.A.
