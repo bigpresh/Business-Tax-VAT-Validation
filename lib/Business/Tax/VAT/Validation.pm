@@ -549,6 +549,10 @@ Robert Alloway, Service Centre, United Kingdom.
 =item *
 Torsten Mueller, Archesoft, Germany
 
+item *
+
+Dave Lambley (davel), United Kingdom
+
 =back
 
 =head1 LICENSE
