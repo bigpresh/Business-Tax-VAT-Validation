@@ -8,6 +8,7 @@ WriteMakefile(
     'PREREQ_PM'		=>  {
 				HTTP::Request::Common => 1.0,
 				LWP::UserAgent	      => 1.0,
+				JSON                  => 0,
                             }, 
     ABSTRACT_FROM    => 'lib/Business/Tax/VAT/Validation.pm',
     AUTHOR           => 'David Precious <davidp@preshweb.co.uk>',
