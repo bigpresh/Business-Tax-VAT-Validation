@@ -27,12 +27,12 @@ package Business::Tax::VAT::Validation;
 #                                                                            #
 ############################################################################
 use strict;
+use warnings;
 
-BEGIN {
-    $Business::Tax::VAT::Validation::VERSION = '1.12';
-    use HTTP::Request::Common qw(POST);
-    use LWP::UserAgent;
-}
+our $VERSION = '1.12';
+
+use HTTP::Request::Common qw(POST);
+use LWP::UserAgent;
 
 =head1 NAME
 
