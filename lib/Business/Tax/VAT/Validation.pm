@@ -555,9 +555,8 @@ Robert Alloway, Service Centre, United Kingdom.
 =item *
 Torsten Mueller, Archesoft, Germany
 
-item *
-
-Dave Lambley (davel), United Kingdom
+=item *
+Dave Lambley (davel), GoDaddy, United Kingdom
 
 =back
 
