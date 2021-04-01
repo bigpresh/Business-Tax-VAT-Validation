@@ -29,7 +29,7 @@ package Business::Tax::VAT::Validation;
 use strict;
 use warnings;
 
-our $VERSION = '1.13_01';
+our $VERSION = '1.20';
 
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
@@ -37,7 +37,7 @@ use JSON qw/ decode_json /;
 
 =head1 NAME
 
-Business::Tax::VAT::Validation - Validate EU VAT numbers against VIES
+Business::Tax::VAT::Validation - Validate EU VAT numbers against VIES/HMRC
 
 =head1 SYNOPSIS
 

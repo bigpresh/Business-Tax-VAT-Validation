@@ -1,5 +1,9 @@
 Revision history for Business::Tax::VAT::Validation
 
+1.20  01/04/2021 (Promoting 1.13 trial release to stable)
+    - Changes as per 1.13 below - supporting UK/XI numbers via HMRC API
+      courtesy of Dave Lambley (davel), GoDaddy
+
 1.13  24/03/2021 (TRIAL release)
     - Implement checking of UK VAT numbers via HMRC (davel)
     - Some refactoring (davel)
