@@ -557,6 +557,9 @@ Torsten Mueller, Archesoft, Germany
 =item *
 Dave Lambley (davel), GoDaddy, United Kingdom
 
+item *
+Tatu Wikman (tswfi)
+
 =back
 
 =head1 LICENSE

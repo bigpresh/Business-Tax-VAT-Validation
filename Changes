@@ -1,7 +1,8 @@
 Revision history for Business::Tax::VAT::Validation
 
-Upcoming changes:
-    - remove `soapaction` header, EU soap endpoint does not like it anymore, see #12
+1.21  01/11/2021
+    - remove `soapaction` header, EU soap endpoint does not like it anymore, 
+      GH#12 (tswfi)
 
 1.20  01/04/2021 (Promoting 1.13 trial release to stable)
     - Changes as per 1.13 below - supporting UK/XI numbers via HMRC API
