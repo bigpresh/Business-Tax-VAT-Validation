@@ -93,7 +93,7 @@ sub new {
         re           => {
             ### t/01_localcheck.t tests if these regexps accepts all regular VAT numbers, according to VIES FAQ
             AT => 'U[0-9]{8}',
-            BE => '0[0-9]{9}',
+            BE => '[01][0-9]{9}',
             BG => '[0-9]{9,10}',
             CY => '[0-9]{8}[A-Za-z]',
             CZ => '[0-9]{8,10}',
