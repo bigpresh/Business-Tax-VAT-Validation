@@ -357,7 +357,7 @@ sub _check_vies {
   my $ua = $self->_get_ua();
   my $request = HTTP::Request->new(POST => $self->{baseurl});
   $request->content(_in_soap_envelope($vatNumber, $countryCode));
-  $request->content_type("Content-Type: application/soap+xml; charset=utf-8");
+  $request->content_type("text/xml; charset=utf-8");
 
   my $response = $ua->request($request);
 
@@ -419,20 +419,16 @@ sub _format_vatn {
 
 sub _in_soap_envelope {
     my ($vatNumber, $countryCode)=@_;
-    '<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-     SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
-     xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
-     xmlns:xsi="http://www.w3.org/1999/XMLSchema-instance"
-     xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-     xmlns:xsd="http://www.w3.org/1999/XMLSchema">
-     <SOAP-ENV:Body>
-     <checkVat xmlns="urn:ec.europa.eu:taxud:vies:services:checkVat:types">
-     <countryCode>'.$countryCode.'</countryCode>
-     <vatNumber>'.$vatNumber.'</vatNumber>
-     </checkVat>
-     </SOAP-ENV:Body>
-     </SOAP-ENV:Envelope>'
+    return <<EWWSOAP;
+<s11:Envelope xmlns:s11='http://schemas.xmlsoap.org/soap/envelope/'>
+     <s11:Body>
+     <tns1:checkVat xmlns:tns1='urn:ec.europa.eu:taxud:vies:services:checkVat:types'>
+     <tns1:countryCode>$countryCode</tns1:countryCode>
+     <tns1:vatNumber>$vatNumber</tns1:vatNumber>
+     </tns1:checkVat>
+     </s11:Body>
+     </s11:Envelope>
+EWWSOAP
 }
 
 sub _is_res_ok {
@@ -441,7 +437,7 @@ sub _is_res_ok {
     $res=~s/[\r\n]/ /g;
     $self->{response} = $res;
     if ($code == 200) {
-        if ($res=~m/<valid> *(.*?) *<\/valid>/) {
+        if ($res=~m/<ns2:valid> *(.*?) *<\/ns2:valid>/) {
             my $v = $1;
             if ($v eq 'true' || $v eq '1') {
                 if ($res=~m/<name> *(.*?) *<\/name>/) {
