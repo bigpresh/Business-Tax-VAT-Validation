@@ -8,7 +8,7 @@ package Business::Tax::VAT::Validation;
  ############################################################################
 # Original author:                                                           #
 # IT Development software                                                    #
-# European VAT number validator Version 1.0.2                                #
+# European VAT number validator                                              #
 # Created 06/08/2003                                                         #
 #                                                                            #
 # Maintainership kindly handed over to David Precious (BIGPRESH) in 2015     #
@@ -55,7 +55,7 @@ Business::Tax::VAT::Validation - Validate EU VAT numbers against VIES/HMRC
 =head1 DESCRIPTION
 
 This class provides an easy API to check European VAT numbers' syntax,
-and if they has been registered by the competent authorities.
+and check if they have been registered by the competent authorities.
 
 It asks the EU database (VIES) for this, using its SOAP API.  Basic checks that
 the supplied VAT number fit the expected format for the specified EU member
@@ -74,11 +74,11 @@ REST API provided by their HMRC.
     $hvatn=Business::Tax::VAT::Validation->new();
 
 
-    If your system is located behind a proxy :
+    # If your system is located behind a proxy :
 
     $hvatn=Business::Tax::VAT::Validation->new(-proxy => ['http', 'http://example.com:8001/']);
 
-    Note : See LWP::UserAgent for proxy options.
+    # Note : See LWP::UserAgent for proxy options.
 
 =cut
 
