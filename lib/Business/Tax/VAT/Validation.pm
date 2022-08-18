@@ -440,10 +440,10 @@ sub _is_res_ok {
         if ($res=~m/<ns2:valid> *(.*?) *<\/ns2:valid>/) {
             my $v = $1;
             if ($v eq 'true' || $v eq '1') {
-                if ($res=~m/<name> *(.*?) *<\/name>/) {
+                if ($res=~m/<ns2:name> *(.*?) *<\/ns2:name>/) {
                     $self->{information}{name} = $1
                 }
-                if ($res=~m/<address> *(.*?) *<\/address>/) {
+                if ($res=~m/<ns2:address> *(.*?) *<\/ns2:address>/) {
                     $self->{information}{address} = $1
                 }
                 $self->_set_error( -1, 'Valid VAT Number');
