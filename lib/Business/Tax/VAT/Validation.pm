@@ -279,7 +279,7 @@ Possible errors are :
 =over 4
 
 =item *
- -1  The provided VAT number is valid.
+ -1  The provided VAT number is valid (so, no error occurred)
 
 =item *
   0  Unknown MS code : Internal checkup failed (Specified Member State does not exist)
