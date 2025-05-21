@@ -488,10 +488,9 @@ sub _set_error {
 
 LWP::UserAgent
 
-L<http://ec.europa.eu/taxation_customs/vies/faqvies.do> for the FAQs related to the VIES service.
+L<https://ec.europa.eu/taxation_customs/vies/#/faq> for the FAQs related to the VIES service.
 
-L<https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-registered-companies-api/1.0>
-for details of the service provided by the UK's HMRC.
+L<https://www.api.gov.uk/ch/companies-house> for details of the service provided by the UK's HMRC.
 
 =head1 FEEDBACK
 
